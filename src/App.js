@@ -1,11 +1,6 @@
 import React from 'react';
-import './App.css';
 
-
-
-
-
-function App() {
+const App = () => {
   const stories = [
     {
       title: 'React',
@@ -24,36 +19,52 @@ function App() {
       objectID: 1,
     },
   ];
-  
+
+  const [searchTerm, setSearchTerm] = React.useState('');
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const searchedStories = stories.filter((story) =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div >
-     <h1>My Hacker Stories</h1>
-     <Search />
-     <hr />
-     <List list={stories} />
+    <div>
+      <h1>My Hacker Stories</h1>
+
+      <Search onSearch={handleSearch} />
+
+      <hr />
+
+      <List list={searchedStories} />
     </div>
   );
 };
 
-const Search = () => {
-  const handleChange = (event) => {
-    console.log(event);
-  }
-return (
+const Search = (props) => {
+  const {search, onSearch} = props;
+  return (
   <div>
     <label htmlFor="search">Search: </label>
-     <input id='search' type='text' />
+    <input 
+      id="search" 
+      type="text" 
+      value={search} 
+      onChange={onSearch}
+    />
   </div>
-);
-}
+ )};
 
 const List = (props) => (
-<ul>
-       {props.list.map((item) => (
-           <li key={item.objectID} item={item} />
-      ))}
-     </ul>
+  <ul>
+    {props.list.map((item) => (
+      <Item key={item.objectID} item={item} />
+    ))}
+  </ul>
 );
+
 const Item = (props) => (
   <li>
     <span>
@@ -63,6 +74,6 @@ const Item = (props) => (
     <span>{props.item.num_comments}</span>
     <span>{props.item.points}</span>
   </li>
-)
+);
 
 export default App;
